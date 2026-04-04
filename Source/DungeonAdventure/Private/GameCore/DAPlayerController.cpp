@@ -1,0 +1,34 @@
+﻿// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "GameCore/DAPlayerController.h"
+
+#include "EnhancedInputSubsystems.h"
+#include "GameCore/DAGameMode.h"
+#include "Kismet/GameplayStatics.h"
+
+ADAPlayerController::ADAPlayerController()
+{
+}
+
+void ADAPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	CurrentGameMode = Cast<ADAGameMode>(UGameplayStatics::GetGameMode(this));
+}
+
+void ADAPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+
+	if (IsLocalPlayerController())
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+		{
+			for (UInputMappingContext* CurrentContext : DefaultMappingContexts)
+			{
+				Subsystem->AddMappingContext(CurrentContext, 0);
+			}
+		}
+	}
+}
