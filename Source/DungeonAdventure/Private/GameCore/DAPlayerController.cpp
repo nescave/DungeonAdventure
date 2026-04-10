@@ -6,6 +6,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "GameCore/DAGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "EnhancedInputComponent.h"
+#include "Character/DACharacter.h"
 
 ADAPlayerController::ADAPlayerController()
 {
@@ -32,3 +34,23 @@ void ADAPlayerController::SetupInputComponent()
 		}
 	}
 }
+
+void ADAPlayerController::ProcessMoveInput(const FVector2D& MoveVector)
+{
+	GetDACharacter()->HandleMove(MoveVector);
+}
+
+ADACharacter* ADAPlayerController::GetDACharacter() const
+{
+	if (!IsLocalPlayerController())
+	{
+		return nullptr;		
+	}
+	if (GetCharacter() != DACharacter)
+	{
+		DACharacter = Cast<ADACharacter>(GetCharacter());
+	}
+	return DACharacter;
+	
+}
+
